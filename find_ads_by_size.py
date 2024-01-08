@@ -33,3 +33,6 @@ with open(INPUT_FILE, "rb") as maincsv:
 		if ( row["BillHeight"] != '' and float( row["BillHeight"] ) > MIN_HEIGHT ):
 			with open(OUTPUT_FILE, "a") as f:
 				f.write(row["AdNumber"] + "," + row["BillHeight"] + "\n")
+
+## Remove database csv file.  It could be a large file and we don't need to keep it around
+os.system('rm ' + INPUT_FILE)
