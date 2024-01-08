@@ -13,7 +13,7 @@ INPUT_FILE = "adtext.csv"
 ADMAX_DATA = "/u/abs/data/ads"
 ADMAX_SCR = "/u/abs/exe/def"
 OUTPUT_FILE = "bad_sizes.csv"
-MIN_HEIGHT = 50
+MIN_HEIGHT = 300
 
 with open(OUTPUT_FILE, "w") as f:
 	f.write("ad_number,height\n")
@@ -30,9 +30,9 @@ with open(INPUT_FILE, "rb") as maincsv:
 	for row in reader:
 		i += 1
 			
-		if ( row["BillHeight"] != '' and float( row["BillHeight"] ) > MIN_HEIGHT ):
+		if ( row["Height"] != '' and float( row["Height"] ) > MIN_HEIGHT ):
 			with open(OUTPUT_FILE, "a") as f:
-				f.write(row["AdNumber"] + "," + row["BillHeight"] + "\n")
+				f.write(row["AdNumber"] + "," + row["Height"] + "\n")
 
 ## Remove database csv file.  It could be a large file and we don't need to keep it around
 os.system('rm ' + INPUT_FILE)
