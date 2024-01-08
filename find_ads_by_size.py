@@ -31,6 +31,5 @@ with open(INPUT_FILE, "rb") as maincsv:
 		i += 1
 			
 		if ( row["BillHeight"] != '' and float( row["BillHeight"] ) > MIN_HEIGHT ):
-			print(row)
 			with open(OUTPUT_FILE, "a") as f:
 				f.write(row["AdNumber"] + "," + row["BillHeight"] + "\n")
