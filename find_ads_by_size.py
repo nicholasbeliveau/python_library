@@ -12,8 +12,9 @@ os.chdir(dir)
 INPUT_FILE = "adtext.csv"
 ADMAX_DATA = "/u/abs/data/ads"
 ADMAX_SCR = "/u/abs/exe/def"
-
 OUTPUT_FILE = "bad_sizes.csv"
+MIN_HEIGHT = 50
+
 with open(OUTPUT_FILE, "w") as f:
 	f.write("ad_number,height\n")
 
@@ -29,7 +30,7 @@ with open(INPUT_FILE, "rb") as maincsv:
 	for row in reader:
 		i += 1
 			
-		if ( row["BillHeight"] != '' and float( row["BillHeight"] ) > 50 ):
+		if ( row["BillHeight"] != '' and float( row["BillHeight"] ) > MIN_HEIGHT ):
 			print(row)
 			with open(OUTPUT_FILE, "a") as f:
 				f.write(row["AdNumber"] + "," + row["BillHeight"] + "\n")
