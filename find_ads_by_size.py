@@ -18,7 +18,6 @@ MIN_HEIGHT = 300
 with open(OUTPUT_FILE, "w") as f:
 	f.write("ad_number,height\n")
 
-# Unload alias, customer, and contacts files
 for file in ["adtext"]:
 	subprocess.run(["/u/scs/tools/bin/unload", "/C0", f"{file}.csv={ADMAX_DATA}/{file},{ADMAX_SCR}/{file}"])
 	
