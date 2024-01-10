@@ -6,6 +6,7 @@ import sys
 import os
 from datetime import datetime
 from datetime import date
+from admax_utils import *
 
 abspath = os.path.abspath(__file__)
 dir = os.path.dirname(abspath)
@@ -23,8 +24,7 @@ ad_dict = {}
 with open(OUTPUT_FILE, "w") as f:
 	f.write("ad_number,height,start_date,end_date\n")
 
-for file in ["adtext", "adheader"]:
-	subprocess.run(["/u/scs/tools/bin/unload", "/C0", f"{file}.csv={ADMAX_DATA}/{file},{ADMAX_SCR}/{file}"])
+dumpAdmaxTable(["adtext", "adheader"])
 	
 with open(AD_TEXT_FILE, "rb") as maincsv:
 	ad_text_reader = csv.DictReader((line.decode("iso8859-1").replace('\0','') for line in maincsv), delimiter=",")
@@ -47,7 +47,5 @@ with open(AD_HEADER_FILE, "rb") as h:
 				f.write( ad["AdNumber"] + "," + ad["Height"] + "," + header_row["StartDate"] + "," + header_row["EndDate"] + "\n")
 
 print( "Number of ads : " + str(i) )
-
 ## Remove database csv file.  It could be a large file and we don't need to keep it around
-os.system('rm ' + AD_TEXT_FILE)
-os.system('rm ' + AD_HEADER_FILE)
+cleanupAdmaxTable(["adtext", "adheader"])
