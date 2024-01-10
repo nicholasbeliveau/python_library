@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import subprocess
+import os
 
 ADMAX_DATA = "/u/abs/data/ads"
 ADMAX_SCR = "/u/abs/exe/def"
@@ -14,3 +15,12 @@ def dumpAdmaxTable( tableName ):
     else:
         print("Invalid tableName")
 
+def cleanupAdmaxTable( tableName ):
+    if (type(tableName) == str):
+        os.system('rm ' + tableName + ".csv")
+    elif (type(tableName) == list):
+        for file in tableName:
+            os.system('rm ' + file + ".csv")
+    else:
+        print("Invalid table name")
+    
