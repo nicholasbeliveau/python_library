@@ -4,13 +4,14 @@ INPUT_FILE = "/home/nick/nypa_input.csv"
 OUTPUT_FILE = "/home/nick/nypa_output.csv"
 
 with open( OUTPUT_FILE, "w") as f:
-  f.write("confirmationId,organizationId,organizationName,organizationContactName,organizationEmail,organizationPhone,category,newspaperName,groupName,noticeHeightInches,numberOfColumns,firstRunDate,noticeFilePath\n")
+  f.write("confirmationId,organizationId,organizationName,organizationContactName,organizationEmail,organizationPhone,category,newspaperNamePaper,newspaperNameEdition,groupName,noticeHeightInches,numberOfColumns,firstRunDate,noticeFilePath\n")
 
 with open(INPUT_FILE, "rb") as inputcsv:
   input_reader = csv.DictReader((line.decode("iso8859-1").replace('\0','') for line in inputcsv), delimiter=",")
 
   for row in input_reader:
     with open( OUTPUT_FILE, "a" ) as f:
+      print( row )
       f.write(row["confirmationId"] + "," 
             + row["organizationId"] + ","
             + "\"" + row["organizationName"] + "\"" + ","
@@ -18,6 +19,7 @@ with open(INPUT_FILE, "rb") as inputcsv:
             + row["organizationEmail"] + ","
             + row["organizationPhone"] + ","
             + row["category"] + "," 
+            + row["newspaperName"] + "," 
             + row["newspaperName"] + "," 
             + row["groupName"] + ","
             + row["noticeHeightInches"] + ","
