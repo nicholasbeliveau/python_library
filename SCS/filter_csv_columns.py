@@ -11,7 +11,6 @@ with open(INPUT_FILE, "rb") as inputcsv:
 
   for row in input_reader:
     with open( OUTPUT_FILE, "a" ) as f:
-      print( row )
       f.write(row["confirmationId"] + "," 
             + row["organizationId"] + ","
             + "\"" + row["organizationName"] + "\"" + ","
@@ -19,8 +18,8 @@ with open(INPUT_FILE, "rb") as inputcsv:
             + row["organizationEmail"] + ","
             + row["organizationPhone"] + ","
             + row["category"] + "," 
-            + row["newspaperName"] + "," 
-            + row["newspaperName"] + "," 
+            + "\"" + row["newspaperName"] + "\"" + "," 
+            + "\"" + row["newspaperName"] + "\"" + "," 
             + row["groupName"] + ","
             + row["noticeHeightInches"] + ","
             + row["numberOfColumns"] + ","
