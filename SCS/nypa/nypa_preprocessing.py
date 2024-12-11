@@ -13,7 +13,6 @@ with open(INPUT_FILE, "rb") as inputcsv:
   input_reader = csv.DictReader((line.decode("iso8859-1").replace('\0','') for line in inputcsv), delimiter=",")
 
   for row in input_reader:
-    ## TODO add site code mapping to paper_edition_codes
     ## /u/ads/imports/eric_input/ put files for testing
 
     with open( CATEGORY_FILE, "rb" ) as categorycsv:
