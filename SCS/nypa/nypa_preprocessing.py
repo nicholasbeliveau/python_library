@@ -6,7 +6,7 @@ OUTPUT_FILE = "/home/nick/nypa_output.csv"
 PAPER_EDITION_FILE = "/home/nick/python_library/SCS/nypa/paper_edition_codes.csv"
 
 with open( OUTPUT_FILE, "w") as f:
-  f.write("confirmationId,organizationId,organizationName,organizationContactName,organizationEmail,organizationPhone,category,newspaperNamePaper,newspaperNameEdition,groupName,noticeHeightInches,numberOfColumns,firstRunDate,noticeFilePath\n")
+  f.write("confirmationId,organizationId,organizationName,organizationContactName,organizationEmail,organizationPhone,category,newspaperNamePaper,newspaperNameEdition,groupName,noticeHeightInches,numberOfColumns,firstRunDate,noticeFilePath,adType\n")
 
 with open(INPUT_FILE, "rb") as inputcsv:
   input_reader = csv.DictReader((line.decode("iso8859-1").replace('\0','') for line in inputcsv), delimiter=",")
@@ -32,4 +32,5 @@ with open(INPUT_FILE, "rb") as inputcsv:
             + row["noticeHeightInches"] + ","
             + row["numberOfColumns"] + ","
             + row["firstRunDate"][6:10] + row["firstRunDate"][0:2] + row["firstRunDate"][3:5] + ","
-            + os.path.basename(row["noticeFilePath"]) + "\n" ) ## TODO cut this down to just the file name
+            + os.path.basename(row["noticeFilePath"]) + ","
+            + "AGATE" + "\n" )
