@@ -1,5 +1,5 @@
 import csv
-import datetime
+import os
 
 INPUT_FILE = "/home/nick/nypa_input.csv"
 OUTPUT_FILE = "/home/nick/nypa_output.csv"
@@ -32,4 +32,4 @@ with open(INPUT_FILE, "rb") as inputcsv:
             + row["noticeHeightInches"] + ","
             + row["numberOfColumns"] + ","
             + row["firstRunDate"][6:10] + row["firstRunDate"][0:2] + row["firstRunDate"][3:5] + ","
-            + row["noticeFilePath"] + "\n" ) ## TODO cut this down to just the file name
+            + os.path.basename(row["noticeFilePath"]) + "\n" ) ## TODO cut this down to just the file name
