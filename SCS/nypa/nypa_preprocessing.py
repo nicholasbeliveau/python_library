@@ -26,11 +26,15 @@ with open(INPUT_FILE, "rb") as inputcsv:
 
     with open( PAPER_EDITION_FILE, "rb" ) as paperEditioncsv:
       siteCode = ""
+      paper = ""
+      edition = ""
 
       paper_edition_reader = csv.DictReader((line.decode("iso8859-1").replace('\0','') for line in paperEditioncsv), delimiter=",")
       for paper_edition_row in paper_edition_reader:
         if ( paper_edition_row["newspaperName"] == row["groupName"] ):
           siteCode = paper_edition_row["siteCode"]
+          paper = paper_edition_row["paperID"]
+          edition = paper_edition_row["editionID"]
 
     with open( OUTPUT_FILE, "a" ) as f:
       f.write(row["confirmationId"] + "," 
@@ -40,8 +44,8 @@ with open(INPUT_FILE, "rb") as inputcsv:
             + row["organizationEmail"] + ","
             + row["organizationPhone"] + ","
             + classCode + "," 
-            + "1,"
-            + "1,"
+            + paper + ","
+            + edition + ","
             + siteCode + ","
             + row["noticeHeightInches"] + ","
             + row["numberOfColumns"] + ","
