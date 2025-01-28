@@ -4,10 +4,28 @@ import csv
 import os
 import sys
 import pandas as pd
+import re
 import shutil
+import subprocess
 
 def get_run_date( file_name ):
   return "20" + file_name[10:12] + file_name[4:6] + file_name[7:9]
+
+def handle_multipage_pdf(pdf_path, output_dir):
+  if os.path.exists(output_dir):
+    shutil.rmtree(output_dir)
+
+  os.makedirs(output_dir, exist_ok=True)
+
+  res = subprocess.run(["pdfinfo", pdf_path], stdout=subprocess.PIPE)
+
+  info_text = res.stdout.decode("utf-8").replace("\n", " ")
+
+  num_pages = int(re.sub(".*Pages:[^0-9]*", "", info_text).split(" ")[0])
+
+  if num_pages > 1:
+    output_pdf_pattern = output_dir + os.path.basename(pdf_path).replace(".pdf", "-%d.pdf")
+    subprocess.run(["pdfseparate", pdf_path, output_pdf_pattern])
 
 if len(sys.argv) > 1:
   INPUT_FILE = sys.argv[1]
@@ -65,6 +83,21 @@ with open("temp.csv", "rb") as inputcsv:
         print( "." + row["newspaperName"] + "." + " paper not mapped correctly" )
 
       fileName = os.path.basename(row["noticeFilePath"])
+      run_date = get_run_date(os.path.basename(INPUT_FILE))
+
+      if siteCode is not None and len(siteCode) > 0:
+        xxx_ppee = f"{siteCode.upper()}_{paper.zfill(2)}{edition.zfill(2)}"
+        pdf_path = "/u/pub_ads/" + xxx_ppee
+
+        if xxx_ppee == "STR_0601":
+          pdf_path += "/Photo_News/The_Chronicle"
+
+        pdf_path += f"/{run_date[:4]}/{run_date[4:6]}-{run_date[6:8]}/Public_notice/"
+        pdf_path += fileName
+        
+        output_dir = f"/u/data/{siteCode.upper()}/{siteCode.upper() + paper}/converted/{run_date[4:8]}/"
+
+        handle_multipage_pdf(pdf_path, output_dir)
 
     with open( OUTPUT_FILE, "a" ) as f:
       f.write(row["confirmationId"] + "," 
@@ -79,7 +112,7 @@ with open("temp.csv", "rb") as inputcsv:
             + siteCode + ","
             + row["noticeHeightInches"] + ","
             + row["numberOfColumns"] + ","
-            + get_run_date( os.path.basename ( INPUT_FILE ) ) + ","
+            + run_date + ","
             + os.path.splitext(fileName)[0] + ","
             + "Agate" 
             + "\n" )
