@@ -28,7 +28,7 @@ def handle_multipage_pdf(pdf_path, output_dir):
     subprocess.run(["pdfseparate", pdf_path, output_pdf_pattern])
 
 if len(sys.argv) > 1:
-  INPUT_FILE = sys.argv[1]
+  INPUT_FILE = "/u/data/import/preprocessing/" + os.path.basename(sys.argv[1])
 else:
   print( "No file passed" )
   sys.exit()
