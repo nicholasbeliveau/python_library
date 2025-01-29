@@ -120,3 +120,4 @@ with open("temp.csv", "rb") as inputcsv:
 output_location = os.environ.get( "OutputLocation" )
 
 shutil.copy( OUTPUT_FILE, output_location )
+
