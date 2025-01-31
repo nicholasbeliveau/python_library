@@ -129,7 +129,7 @@ with open("temp.csv", "rb") as inputcsv:
           series_num = i + 1
           ad_number += "-" + str(series_num)
           file_name = f"{siteCode.upper() + paper}-{run_date[4:8]}-{file_name}"
-          file_name.replace(".pdf", "-{str(series_num)}.pdf"
+          file_name.replace(".pdf", "-{str(series_num)}.pdf")
  
         f.write(ad_number + ","
             + row["organizationId"] + ","
