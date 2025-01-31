@@ -110,8 +110,8 @@ with open("temp.csv", "rb") as inputcsv:
     use_series = (num_pages > 1)
 
     if use_series:
-      global_page_name += 1
-      series_name = global_page_name
+      global_series_name += 1
+      series_name = global_series_name
     else:
       series_name = ""
       series_num = ""
