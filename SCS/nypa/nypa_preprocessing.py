@@ -27,6 +27,8 @@ def handle_multipage_pdf(pdf_path, output_dir):
     output_pdf_pattern = output_dir + os.path.basename(pdf_path).replace(".pdf", "-%d.pdf")
     subprocess.run(["pdfseparate", pdf_path, output_pdf_pattern])
 
+  return num_pages
+
 if len(sys.argv) > 1:
   INPUT_FILE = "/u/data/import/preprocessing/" + os.path.basename(sys.argv[1])
 else:
@@ -44,14 +46,20 @@ OUTPUT_FILE = "nypa_output_" + get_run_date( os.path.basename( INPUT_FILE ) ) + 
 PAPER_EDITION_FILE = "site_mappings.csv"
 CATEGORY_FILE = "category_mapping.csv"
 
+## TODO: If the number of ads exceeds 9999, better logic will
+## need to be implemented for series_name
+global_series_name = 0
+
 with open( OUTPUT_FILE, "w") as f:
-  f.write("confirmationId,organizationId,organizationName,organizationContactName,organizationEmail,organizationPhone,category,newspaperNamePaper,newspaperNameEdition,groupName,noticeHeightInches,numberOfColumns,firstRunDate,noticeFilePath,adType\n")
+  f.write("confirmationId,organizationId,organizationName,organizationContactName,organizationEmail,organizationPhone,category,newspaperNamePaper,newspaperNameEdition,groupName,noticeHeightInches,numberOfColumns,firstRunDate,noticeFilePath,adType,seriesName,seriesNumber\n")
 
 with open("temp.csv", "rb") as inputcsv:
   input_reader = csv.DictReader((line.decode("iso8859-1").replace('\0','') for line in inputcsv), delimiter=",")
 
   for row in input_reader:
     ## /u/ads/imports/eric_input/ put files for testing
+
+    num_pages = 1
 
     with open( CATEGORY_FILE, "rb" ) as categorycsv:
       classCode = ""
@@ -97,10 +105,26 @@ with open("temp.csv", "rb") as inputcsv:
         
         output_dir = f"/u/data/{siteCode.upper()}/{siteCode.upper() + paper}/converted/{run_date[4:8]}/"
 
-        handle_multipage_pdf(pdf_path, output_dir)
+        num_pages = handle_multipage_pdf(pdf_path, output_dir)
+
+    use_series = (num_pages > 1)
+
+    if use_series:
+      global_page_name += 1
+      series_name = global_page_name
+    else:
+      series_name = ""
+      series_num = ""
 
     with open( OUTPUT_FILE, "a" ) as f:
-      f.write(row["confirmationId"] + "," 
+      for i in range(num_pages):
+        ad_number = row["confirmationId"]
+
+        if use_series:
+          series_num = i + 1
+          ad_number += "-" + str(series_num)
+
+        f.write(ad_number + ","
             + row["organizationId"] + ","
             + "\"" + row["organizationName"] + "\"" + ","
             + "\"" + row["organizationContactName"] + "\"" + ","
@@ -114,7 +138,9 @@ with open("temp.csv", "rb") as inputcsv:
             + row["numberOfColumns"] + ","
             + run_date + ","
             + os.path.splitext(fileName)[0] + ","
-            + "Agate" 
+            + "Agate" + ","
+            + str(series_name) + ","
+            + str(series_num) + ","
             + "\n" )
       
 output_location = os.environ.get( "OutputLocation" )
