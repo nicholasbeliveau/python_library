@@ -100,7 +100,13 @@ with open("temp.csv", "rb") as inputcsv:
         if xxx_ppee == "STR_0601":
           pdf_path += "/Photo_News/The_Chronicle"
 
-        pdf_path += f"/{run_date[:4]}/{run_date[4:6]}-{run_date[6:8]}/Public_notice/"
+        pdf_path += f"/{run_date[:4]}/{run_date[4:6]}-{run_date[6:8]}"
+
+        if xxx_ppee == "STR_0301":
+          pdf_path += "/Legal_notice/"
+        else:
+          pdf_path += "/Public_notice/"
+
         pdf_path += fileName
         
         output_dir = f"/u/data/{siteCode.upper()}/{siteCode.upper() + paper}/converted/{run_date[4:8]}/"
