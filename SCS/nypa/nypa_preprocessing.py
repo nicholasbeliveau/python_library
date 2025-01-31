@@ -119,10 +119,12 @@ with open("temp.csv", "rb") as inputcsv:
     with open( OUTPUT_FILE, "a" ) as f:
       for i in range(num_pages):
         ad_number = row["confirmationId"]
+        file_name = os.path.splitext(fileName)[0]
 
         if use_series:
           series_num = i + 1
           ad_number += "-" + str(series_num)
+          file_name += "-" + str(series_num)
 
         f.write(ad_number + ","
             + row["organizationId"] + ","
@@ -137,7 +139,7 @@ with open("temp.csv", "rb") as inputcsv:
             + row["noticeHeightInches"] + ","
             + row["numberOfColumns"] + ","
             + run_date + ","
-            + os.path.splitext(fileName)[0] + ","
+            + file_name + ","
             + "Agate" + ","
             + str(series_name) + ","
             + str(series_num) + ","
