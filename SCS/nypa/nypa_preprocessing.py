@@ -22,7 +22,7 @@ def handle_multipage_pdf(pdf_path, output_prefix):
   num_pages = int(re.sub(".*Pages:[^0-9]*", "", info_text).split(" ")[0])
 
   if num_pages > 1:
-    output_pdf_pattern = output_prefix + os.path.basename(pdf_path).replace(".pdf", "-%d.pdf")
+    output_pdf_pattern = output_prefix + "-%d.pdf"
     subprocess.run(["pdfseparate", pdf_path, output_pdf_pattern])
 
   return num_pages
@@ -58,6 +58,7 @@ with open("temp.csv", "rb") as inputcsv:
     ## /u/ads/imports/eric_input/ put files for testing
 
     num_pages = 1
+    ad_number = row["confirmationId"]
 
     with open( CATEGORY_FILE, "rb" ) as categorycsv:
       classCode = ""
@@ -106,8 +107,9 @@ with open("temp.csv", "rb") as inputcsv:
           pdf_path += "/Public_notice/"
 
         pdf_path += fileName
-        
-        output_prefix = f"/u/data/converted/{siteCode.upper() + paper}-{run_date[4:8]}-"
+
+        output_file = f"{siteCode.upper() + paper}-{run_date[4:8]}-{ad_number}"
+        output_prefix = f"/u/data/converted/{output_file}"
 
         num_pages = handle_multipage_pdf(pdf_path, output_prefix)
 
@@ -122,13 +124,12 @@ with open("temp.csv", "rb") as inputcsv:
 
     with open( OUTPUT_FILE, "a" ) as f:
       for i in range(num_pages):
-        ad_number = row["confirmationId"]
         file_name = os.path.splitext(fileName)[0]
 
         if use_series:
           series_num = i + 1
           ad_number += "-" + str(series_num)
-          file_name = f"{siteCode.upper() + paper}-{run_date[4:8]}-{file_name}-{str(series_num)}"
+          file_name = output_file + "-" + str(series_num)
  
         f.write(ad_number + ","
             + row["organizationId"] + ","
