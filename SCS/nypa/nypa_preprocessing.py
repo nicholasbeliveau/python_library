@@ -11,11 +11,9 @@ import subprocess
 def get_run_date( file_name ):
   return "20" + file_name[10:12] + file_name[4:6] + file_name[7:9]
 
-def handle_multipage_pdf(pdf_path, output_dir):
-  if os.path.exists(output_dir):
-    shutil.rmtree(output_dir)
-
-  os.makedirs(output_dir, exist_ok=True)
+def handle_multipage_pdf(pdf_path, output_prefix):
+  if not os.path.exists(os.path.dirname(output_prefix)):
+     os.makedirs(os.path.dirname(output_prefix), exist_ok=True)
 
   res = subprocess.run(["pdfinfo", pdf_path], stdout=subprocess.PIPE)
 
@@ -24,7 +22,7 @@ def handle_multipage_pdf(pdf_path, output_dir):
   num_pages = int(re.sub(".*Pages:[^0-9]*", "", info_text).split(" ")[0])
 
   if num_pages > 1:
-    output_pdf_pattern = output_dir + os.path.basename(pdf_path).replace(".pdf", "-%d.pdf")
+    output_pdf_pattern = output_prefix + os.path.basename(pdf_path).replace(".pdf", "-%d.pdf")
     subprocess.run(["pdfseparate", pdf_path, output_pdf_pattern])
 
   return num_pages
@@ -109,9 +107,9 @@ with open("temp.csv", "rb") as inputcsv:
 
         pdf_path += fileName
         
-        output_dir = f"/u/data/{siteCode.upper()}/{siteCode.upper() + paper}/converted/{run_date[4:8]}/"
+        output_prefix = f"/u/data/converted/{siteCode.upper() + paper}-{run_date[4:8]}-"
 
-        num_pages = handle_multipage_pdf(pdf_path, output_dir)
+        num_pages = handle_multipage_pdf(pdf_path, output_prefix)
 
     use_series = (num_pages > 1)
 
@@ -130,8 +128,9 @@ with open("temp.csv", "rb") as inputcsv:
         if use_series:
           series_num = i + 1
           ad_number += "-" + str(series_num)
-          file_name += "-" + str(series_num)
-
+          file_name = f"{siteCode.upper() + paper}-{run_date[4:8]}-{file_name}"
+          file_name.replace(".pdf", "-{str(series_num)}.pdf"
+ 
         f.write(ad_number + ","
             + row["organizationId"] + ","
             + "\"" + row["organizationName"] + "\"" + ","
