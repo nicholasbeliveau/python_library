@@ -58,7 +58,7 @@ with open("temp.csv", "rb") as inputcsv:
     ## /u/ads/imports/eric_input/ put files for testing
 
     num_pages = 1
-    ad_number = row["confirmationId"]
+    orig_ad_number = row["confirmationId"]
 
     with open( CATEGORY_FILE, "rb" ) as categorycsv:
       classCode = ""
@@ -108,7 +108,7 @@ with open("temp.csv", "rb") as inputcsv:
 
         pdf_path += fileName
 
-        output_file = f"{siteCode.upper() + paper}-{run_date[4:8]}-{ad_number}"
+        output_file = f"{siteCode.upper() + paper}-{run_date[4:8]}-{orig_ad_number}"
         output_prefix = f"/u/data/converted/{output_file}"
 
         num_pages = handle_multipage_pdf(pdf_path, output_prefix)
@@ -124,6 +124,7 @@ with open("temp.csv", "rb") as inputcsv:
 
     with open( OUTPUT_FILE, "a" ) as f:
       for i in range(num_pages):
+        ad_number = orig_ad_number
         file_name = os.path.splitext(fileName)[0]
 
         if use_series:
