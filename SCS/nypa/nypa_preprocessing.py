@@ -64,6 +64,12 @@ with open("temp.csv", "rb") as inputcsv:
       classCode = ""
 
       category_reader = csv.DictReader((line.decode("iso8859-1").replace('\0','') for line in categorycsv), delimiter=",")
+
+      ## case to handle skipping ads that are not public notices
+      ## we may need to add functionality for these, but not currently
+      if ( row["category"].strip() != "Public notice" ):
+        continue
+
       for cateogry_row in category_reader:
         if ( cateogry_row["nypaCategoryName"] == row["category"] ):
           classCode = cateogry_row["classCode"]
